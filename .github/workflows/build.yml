@@ -1,47 +1,81 @@
-name: Build
+name: Build LineageOS GSI Go ARM64
 
 on:
-  workflow_dispatch:
-    inputs:
-      runner:
-        description: 'Runner'
-        required: true
-        type: string
-        default: 'self-hosted' # ubuntu-latest
+  workflow_dispatch: # Lancement manuel
 
 jobs:
   build:
-    runs-on: ${{ github.event_name == 'workflow_dispatch' && inputs.runner || 'self-hosted' }}
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v5
-
-      - name: Set ENV
-        run: | 
-          chmod +x *.sh
-          echo "VERSION=$(date '+%Y.%m.%d')" >> $GITHUB_ENV
-    
-      - name: Build
-        env:
-            DEBIAN_FRONTEND: noninteractive
+      - name: 1. Libérer l'espace disque (Purge AGRESSIVE)
         run: |
-          ./build.sh
+          echo "Espace avant nettoyage :"
+          df -h
+          # Suppression des SDK et outils lourds identifiés dans /usr et /opt
+          sudo rm -rf /usr/local/lib/android # -15 Go
+          sudo rm -rf /usr/local/share/dotnet # -5 Go
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache # -5 Go (Python/Node/Go)
+          sudo rm -rf /usr/local/julia*
+          sudo rm -rf /usr/local/share/powershell
+          
+          # Purge des paquets APT inutiles de votre liste packages.txt
+          sudo apt-get purge -y \
+            google-cloud-cli azure-cli microsoft-edge-stable google-chrome-stable \
+            temurin-8-jdk temurin-11-jdk temurin-21-jdk temurin-25-jdk \
+            mongodb* mysql* postgresql* php* ruby* dotnet-sdk* powershell
+            
+          sudo apt-get autoremove -y
+          sudo apt-get clean
+          
+          echo "Espace après nettoyage :"
+          df -h
 
-      - name: Set
+      - name: 2. Installer les outils de build Android
         run: |
-          echo "UTM=$(find android/lineage/out/target/product/virtio_arm64only/VirtualMachine/UTM/ -name UTM-VM*.zip)" >> $GITHUB_ENV
-          echo "ZIP=$(find android/lineage/out/target/product/virtio_arm64only/ -name *ota.zip)" >> $GITHUB_ENV
-          echo "BOOT=$(find android/lineage/out/target/product/virtio_arm64only/boot.img)" >> $GITHUB_ENV
-          echo "RECOVERY=$(find android/lineage/out/target/product/virtio_arm64only/recovery.img)" >> $GITHUB_ENV
+          sudo apt-get update
+          sudo apt-get install -y bc bison build-essential ccache curl flex g++-multilib \
+          gcc-multilib git gnupg gperf lib32ncurses5-dev lib32readline-dev \
+          lib32z1-dev liblz4-tool libncurses5 libncurses5-dev libsdl1.2-dev \
+          libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool \
+          squashfs-tools xsltproc zip zlib1g-dev python3-is-python3
 
-      - name: Publish
-        uses: softprops/action-gh-release@v2
+      - name: 3. Configuration Repo (Shallow Clone)
+        run: |
+          mkdir ~/bin
+          curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+          chmod a+x ~/bin/repo
+          export PATH="$HOME/bin:$PATH"
+          
+          mkdir workspace && cd workspace
+          # IMPORTANT: --depth=1 pour économiser 80 Go d'historique Git
+          ~/bin/repo init --depth=1 -u https://github.com/LineageOS/android.git -b lineage-21.0
+          
+      - name: 4. Téléchargement sélectif (Sync)
+        run: |
+          export PATH="$HOME/bin:$PATH"
+          cd workspace
+          # On ne synchronise que le strict nécessaire pour une GSI
+          ~/bin/repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+
+      - name: 5. Préparation GSI ARM64-only Go
+        run: |
+          cd workspace
+          source build/envsetup.sh
+          # On choisit le lunch pour GSI ARM64
+          lunch lineage_arm64_bg-userdebug 
+          
+          # Modification pour le mode "Go" (Low RAM)
+          echo "TARGET_SYSTEM_PROP += ro.config.low_ram=true" >> device/lineage/sepolicy/common/property_contexts
+
+      - name: 6. Build de l'image système
+        run: |
+          cd workspace
+          # On compile uniquement le system image pour économiser du temps et de l'espace
+          make systemimage -j$(nproc --all)
+
+      - name: 7. Upload de la GSI
+        uses: actions/upload-artifact@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          name: v${{ env.VERSION }}
-          tag_name: v${{ env.VERSION }}
-          files: |
-            recovery-userdebug.img
-            ${{ env.UTM }}
-            ${{ env.ZIP }}
-            ${{ env.BOOT }}
-            ${{ env.RECOVERY }}
+          name: LineageOS-21-GSI-ARM64-Go
+          path: workspace/out/target/product/*/system.img

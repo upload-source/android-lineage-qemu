@@ -21,7 +21,7 @@ export PATH="$(realpath .)/bin:$PATH"
 cd android/lineage
 export PATH="$(realpath .)/prebuilts/sdk/tools/linux/bin/:$PATH"
 repo init -u https://github.com/LineageOS/android.git -b lineage-23.2 --git-lfs --no-clone-bundle
-repo sync -j 8 # $(nproc)
+repo sync -j $(nproc)
 
 source build/envsetup.sh
 export AB_OTA_UPDATER=true ROOMSERVICE_BRANCHES="lineage-23.1 lineage-23.0"

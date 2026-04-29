@@ -1,4 +1,4 @@
-name: Build LineageOS GSI Go ARM64
+name: Build LineageOS GSI ARM64
 
 on:
   schedule:
@@ -8,31 +8,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: 1. Libérer l'espace disque (Purge AGRESSIVE)
+      - name: 1.Clean space
         run: |
-          echo "Espace avant nettoyage :"
           df -h
-          # Suppression des SDK et outils lourds identifiés dans /usr et /opt
           sudo rm -rf /usr/local/lib/android # -15 Go
           sudo rm -rf /usr/local/share/dotnet # -5 Go
           sudo rm -rf /opt/ghc
           sudo rm -rf /opt/hostedtoolcache # -5 Go (Python/Node/Go)
           sudo rm -rf /usr/local/julia*
           sudo rm -rf /usr/local/share/powershell
-          
-          # Purge des paquets APT inutiles de votre liste packages.txt
           sudo apt-get purge -y \
             google-cloud-cli azure-cli microsoft-edge-stable google-chrome-stable \
             temurin-8-jdk temurin-11-jdk temurin-21-jdk temurin-25-jdk \
             mongodb* mysql* postgresql* php* ruby* dotnet-sdk* powershell
-            
           sudo apt-get autoremove -y
           sudo apt-get clean
-          
-          echo "Espace après nettoyage :"
           df -h
 
-      - name: 2. Installer les outils de build Android
+      - name: 2. Installer build deps
         run: |
           sudo apt-get update
           sudo apt-get install -y bc bison build-essential ccache curl flex g++-multilib \

@@ -20,7 +20,11 @@ For the latest CI release, see [releases](https://github.com/jqssun/android-line
 ```shell
 adb sideload [lineage_virtio_arm64only-ota.zip|*.zip]
 ```
-
+### Start qemu 
+run 
+```shell
+./start_vm.sh
+```
 ### Android Debug Bridge (ADB)
 
 [These targets offer ADB access over Ethernet or VirtIO VSOCK.](https://wiki.lineageos.org/libvirt-qemu#adb-connection) If running on macOS/iOS devices (via UTM), ports 5555 and 5554 (for `adbd` and `fastbootd`) are forwarded to the host device by default via `Emulated VLAN`. This means you can connect via

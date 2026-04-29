@@ -10,8 +10,8 @@ qemu-system-aarch64 \
 -drive if=pflash,format=raw,file=./efi_vars.fd \
 -device virtio-gpu-gl-pci \
 -display sdl,gl=on \
--drive file=./vda.qcow2,if=virtio,format=qcow2,cache=writeback,l2-cache-size=1M \
--drive file=./vdb.qcow2,if=virtio,format=qcow2,cache=writeback,l2-cache-size=1M \
+-drive file=./vda.qcow2,if=virtio,format=qcow2,cache=writeback,l2-cache-size=1M,aio=io_uring \
+-drive file=./vdb.qcow2,if=virtio,format=qcow2,cache=writeback,l2-cache-size=1M,aio=io_uring \
 -device virtio-net-pci,netdev=net0 \
 -netdev user,id=net0,hostfwd=tcp::5554-:5554,hostfwd=tcp::5555-:5555 \
 -device virtio-rng-pci \

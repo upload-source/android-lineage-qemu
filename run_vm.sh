@@ -1,0 +1,23 @@
+#!/bin/bash
+qemu-system-aarch64 \
+-name "LineageOS on arm64" \
+-machine virt,gic-version=3 \
+-cpu max \
+-accel tcg,tb-size=2048,thread=multi \
+-smp 4 \
+-m 8192 \
+-drive if=pflash,format=raw,readonly=on,file=./QEMU_CODE.fd \
+-drive if=pflash,format=raw,file=./efi_vars.fd \
+-device virtio-gpu-gl-pci \
+-display sdl,gl=on \
+-drive file=./vda.qcow2,if=virtio,format=qcow2,cache=writeback,l2-cache-size=1M \
+-drive file=./vdb.qcow2,if=virtio,format=qcow2,cache=writeback,l2-cache-size=1M \
+-device virtio-net-pci,netdev=net0 \
+-netdev user,id=net0,hostfwd=tcp::5554-:5554,hostfwd=tcp::5555-:5555 \
+-device virtio-rng-pci \
+-device usb-ehci,id=usb-bus \
+-device usb-kbd,bus=usb-bus.0 \
+-device usb-tablet,bus=usb-bus.0 \
+-audiodev none,id=noaudio \
+-chardev stdio,mux=on,id=charconsole \
+-serial chardev:charconsole 

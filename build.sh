@@ -4,7 +4,8 @@ export _JAVA_OPTIONS="-Xmx8g"
 export LZ4_COMPRESSION_LEVEL=9
 export ANDROID_QUIET_BUILD=true
 export USE_CCACHE=1
-export CCACHE_DIR=/builds/votre-projet/ccache
+export CCACHE_DIR=~/.ccache
+ccache -M 20G
 export CCACHE_EXEC=/usr/bin/ccache
 export PYTHONDONTWRITEBYTECODE=true
 export BUILD_ENFORCE_SELINUX=1

@@ -17,6 +17,12 @@ jobs:
         run: | 
           chmod +x *.sh
           echo "VERSION=$(date '+%Y.%m.%d')" >> $GITHUB_ENV
+      - name: Setup Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.ccache
+          key: ccache-${{ runner.os }}-${{ github.sha }}
+          restore-keys: ccache-${{ runner.os }}-
       - name: Build
         env:
             DEBIAN_FRONTEND: noninteractive

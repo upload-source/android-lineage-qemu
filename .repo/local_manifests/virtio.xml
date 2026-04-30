@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <remove-project name="platform/prebuilts/gcc/linux-x86/riscv/riscv64-unknown-elf" />
+  <remove-project name="platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9" />
+  <remove-project name="platform/prebuilts/ndk/current/platforms/android-riscv64" />
+  
+  <project name="votre_repo/android_device_virtio_arm64only" path="device/virtio/arm64only" remote="github" revision="lineage-23.2" />
+</manifest>

@@ -6,6 +6,8 @@ export ANDROID_QUIET_BUILD=true
 export USE_CCACHE=1
 export CCACHE_DIR=/builds/votre-projet/ccache
 export CCACHE_EXEC=/usr/bin/ccache
+export PYTHONDONTWRITEBYTECODE=true
+export BUILD_ENFORCE_SELINUX=1
 ccache -M 50G
 sudo apt update
 sudo apt install -y bc bison build-essential ccache curl flex g++-multilib gcc-multilib git git-lfs gnupg gperf imagemagick protobuf-compiler python3-protobuf lib32readline-dev lib32z1-dev libdw-dev libelf-dev libgnutls28-dev lz4 libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc xxd zip zlib1g-dev meson glslang-tools python3-mako python-is-python3
@@ -23,8 +25,8 @@ chmod a+x bin/repo
 export PATH="$(realpath .)/bin:$PATH"
 cd android/lineage
 export PATH="$(realpath .)/prebuilts/sdk/tools/linux/bin/:$PATH"
-repo init -u https://github.com/LineageOS/android.git -b lineage-23.2 --git-lfs --no-clone-bundle
-repo sync -j $(nproc)
+repo init -u https://github.com/LineageOS/android.git -b lineage-23.2 --git-lfs --no-clone-bundle --depth=1 -g default,arm64,-arm,-riscv,-riscv64,-x86,-x86_64,-mips,-darwin
+repo sync -c -j8 --no-tags --no-clone-bundle --optimized-fetch --prune
 
 source build/envsetup.sh
 export AB_OTA_UPDATER=true ROOMSERVICE_BRANCHES="lineage-23.1 lineage-23.0"

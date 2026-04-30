@@ -1,75 +1,35 @@
-name: Build LineageOS GSI ARM64
+name: Build
 
 on:
-  schedule:
-    - cron: '1 0 1 * *'
-  workflow_dispatch: 
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: 'Runner'
+        required: true
+        type: string
+        default: 'self-hosted' # ubuntu-latest
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && inputs.runner || 'self-hosted' }}
     steps:
-      - name: 1.Clean space
+      - uses: actions/checkout@v5
+      - name: Set ENV
+        run: | 
+          chmod +x *.sh
+          echo "VERSION=$(date '+%Y.%m.%d')" >> $GITHUB_ENV
+      - name: Build
+        env:
+            DEBIAN_FRONTEND: noninteractive
         run: |
-          df -h
-          sudo rm -rf /usr/local/lib/android # -15 Go
-          sudo rm -rf /usr/local/share/dotnet # -5 Go
-          sudo rm -rf /opt/ghc
-          sudo rm -rf /opt/hostedtoolcache # -5 Go (Python/Node/Go)
-          sudo rm -rf /usr/local/julia*
-          sudo rm -rf /usr/local/share/powershell
-          sudo apt-get purge -y \
-            google-cloud-cli azure-cli microsoft-edge-stable google-chrome-stable \
-            temurin-8-jdk temurin-11-jdk temurin-21-jdk temurin-25-jdk \
-            mongodb* mysql* postgresql* php* ruby* dotnet-sdk* powershell
-          sudo apt-get autoremove -y
-          sudo apt-get clean
-          df -h
-
-      - name: 2. Installer build deps
+          ./build.sh
+      - name: Set
         run: |
-          sudo apt-get update
-          sudo apt-get install -y bc bison build-essential ccache curl flex g++-multilib \
-          gcc-multilib git gnupg gperf lib32readline-dev \
-          lib32z1-dev liblz4-tool libncurses6 libncurses-dev libsdl1.2-dev \
-          libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool \
-          squashfs-tools xsltproc zip zlib1g-dev 
-          sudo ln -sf /usr/bin/python3 /usr/bin/python
-      - name: 3. Configuration Repo (Shallow Clone)
-        run: |
-          mkdir ~/bin
-          curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
-          chmod a+x ~/bin/repo
-          export PATH="$HOME/bin:$PATH"
-          
-          mkdir workspace && cd workspace
-          # IMPORTANT: --depth=1 pour économiser 80 Go d'historique Git
-          ~/bin/repo init --depth=1 -u https://github.com/LineageOS/android.git -b lineage-21.0
-          
-      - name: 4. Téléchargement sélectif (Sync)
-        run: |
-          export PATH="$HOME/bin:$PATH"
-          cd workspace
-          # On ne synchronise que le strict nécessaire pour une GSI
-          ~/bin/repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
-
-      - name: 5. Préparation GSI ARM64-only Go
-        run: |
-          cd workspace
-          source build/envsetup.sh
-          # On choisit le lunch pour GSI ARM64
-          lunch lineage_arm64_bg-userdebug 
-          
-          # Modification pour le mode "Go" (Low RAM)
-          echo "TARGET_SYSTEM_PROP += ro.config.low_ram=true" >> device/lineage/sepolicy/common/property_contexts
-
-      - name: 6. Build de l'image système
-        run: |
-          cd workspace
-          # On compile uniquement le system image pour économiser du temps et de l'espace
-          make systemimage -j$(nproc --all)
-
-      - name: 7. Upload de la GSI
-        uses: actions/upload-artifact@v4
+          echo "UTM=$(find android/lineage/out/target/product/virtio_arm64only/VirtualMachine/UTM/ -name UTM-VM*.zip)" >> $GITHUB_ENV
+      - name: Publish
+        uses: softprops/action-gh-release@v2
         with:
-          name: LineageOS-21-GSI-ARM64-Go
-          path: workspace/out/target/product/*/system.img
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: v${{ env.VERSION }}
+          tag_name: v${{ env.VERSION }}
+          files: |
+            ${{ env.UTM }}

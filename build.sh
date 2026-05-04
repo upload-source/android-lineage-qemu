@@ -24,6 +24,7 @@ mkdir -p bin
 curl https://storage.googleapis.com/git-repo-downloads/repo > bin/repo
 chmod a+x bin/repo
 export PATH="$(realpath .)/bin:$PATH"
+cd lineage
 export PATH="$(realpath .)/prebuilts/sdk/tools/linux/bin/:$PATH"
 repo init -u https://github.com/LineageOS/android.git -b lineage-23.2 --depth=1 --git-lfs -g default,-darwin,-mips,-x86,-x86_64,-arm,-riscv,-riscv64,-abi-dumps
 repo sync -c -j8 --no-tags --no-clone-bundle --optimized-fetch --prune

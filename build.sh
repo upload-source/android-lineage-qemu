@@ -26,7 +26,7 @@ chmod a+x bin/repo
 export PATH="$(realpath .)/bin:$PATH"
 cd android/lineage
 export PATH="$(realpath .)/prebuilts/sdk/tools/linux/bin/:$PATH"
-repo init -u https://github.com/LineageOS/android.git -b lineage-23.2 --git-lfs --no-clone-bundle --depth=1 -g default,arm64,-arm,-riscv,-riscv64,-x86,-x86_64,-mips,-darwin
+repo init -u https://github.com/LineageOS/android.git -b lineage-23.2 --depth=1 --git-lfs -g default,-device,-pdk,-darwin,-mips,-x86,-arm,-riscv,-riscv64,-abi-dumps
 repo sync -c -j8 --no-tags --no-clone-bundle --optimized-fetch --prune
 
 source build/envsetup.sh

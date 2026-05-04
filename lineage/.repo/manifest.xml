@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <remove-project name="platform/prebuilts/abi-dumps/ndk" />
+  <remove-project name="platform/prebuilts/abi-dumps/platform" />
+  <remove-project name="platform/prebuilts/abi-dumps/vndk" />
+  <remove-project name="platform/prebuilts/sdk"
+  <remove-project name="platform/prebuilts/abi-dumps/ndk" />
+  <remove-project name="platform/prebuilts/abi-dumps/platform" />
+  <remove-project name="platform/prebuilts/abi-dumps/vndk" />
+  <project path="device/virtio/arm64only" name="LineageOS/android_device_virtio_arm64only" remote="github" />
+  <project path="kernel/virt/virtio" name="LineageOS/android_kernel_virt_virtio" remote="github" />
+</manifest>

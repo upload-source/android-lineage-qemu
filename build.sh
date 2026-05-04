@@ -28,7 +28,8 @@ cd android/lineage
 export PATH="$(realpath .)/prebuilts/sdk/tools/linux/bin/:$PATH"
 repo init -u https://github.com/LineageOS/android.git -b lineage-23.2 --depth=1 --git-lfs -g default,-device,-darwin,-mips,-x86,-arm,-riscv,-riscv64,-abi-dumps
 repo sync -c -j8 --no-tags --no-clone-bundle --optimized-fetch --prune
-
+pwd
+ls -a
 source build/envsetup.sh
 export AB_OTA_UPDATER=true ROOMSERVICE_BRANCHES="lineage-23.1 lineage-23.0"
 echo "CONFIG_RTC_CLASS=y" >> kernel/virt/virtio/arch/arm64/configs/lineageos/virtio.config

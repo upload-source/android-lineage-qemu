@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
-  <remove-project name="platform/prebuilts/gcc/linux-x86/riscv/riscv64-unknown-elf" />
+  <remove-project name="platform/prebuilts/gcc/linux-x86/x86/x86_64-linux-android-4.9" />
   <remove-project name="platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9" />
+  <remove-project name="platform/prebuilts/gcc/linux-x86/mips/mips64el-linux-android-4.9" />
   <remove-project name="platform/prebuilts/ndk/current/platforms/android-riscv64" />
-  
-  <project name="votre_repo/android_device_virtio_arm64only" path="device/virtio/arm64only" remote="github" revision="lineage-23.2" />
+  <remove-project name="platform/prebuilts/abi-dumps/ndk" />
+  <remove-project name="platform/prebuilts/abi-dumps/platform" />
+  <remove-project name="platform/prebuilts/abi-dumps/vndk" />
+  <remove-project name="platform/prebuilts/rust" />
+  <remove-project name="platform/prebuilts/sdk/tools/darwin" />
+  <remove-project name="platform/prebuilts/sdk/tools/windows" />
+  <project path="device/virtio/arm64only" name="LineageOS/android_device_virtio_arm64only" remote="github" revision="lineage-23.2" />
+  <project path="kernel/virt/virtio" name="LineageOS/android_kernel_virt_virtio" remote="github" revision="lineage-23.2" />
 </manifest>

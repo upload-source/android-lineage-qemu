@@ -20,18 +20,14 @@ git config --global trailer.changeid.key "Change-Id"
 git config --global color.ui true
 git lfs install
 unset REPO_URL
-mkdir -p bin android/lineage
+mkdir -p bin
 curl https://storage.googleapis.com/git-repo-downloads/repo > bin/repo
 chmod a+x bin/repo
 export PATH="$(realpath .)/bin:$PATH"
-cd android/lineage
 export PATH="$(realpath .)/prebuilts/sdk/tools/linux/bin/:$PATH"
-repo init -u https://github.com/LineageOS/android.git -b lineage-23.2 --depth=1 --git-lfs -g default,-darwin,-mips,-x86,-arm,-riscv,-riscv64,-abi-dumps
+repo init -u https://github.com/LineageOS/android.git -b lineage-23.2 --depth=1 --git-lfs -g default,-darwin,-mips,-x86,-x86_64,-arm,-riscv,-riscv64,-abi-dumps
 repo sync -c -j8 --no-tags --no-clone-bundle --optimized-fetch --prune
 mkdir -p kernel/virt/virtio
-cd kernel/virt/virtio
-git clone https://github.com/LineageOS/android_kernel_virt_virtio --depth 1
-cd ../../../
 pwd
 ls -a
 source build/envsetup.sh

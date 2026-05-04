@@ -1,27 +1,21 @@
 # LineageOS for QEMU Virtual Machines
 
-[![GitHub](https://img.shields.io/github/downloads/jqssun/android-lineage-qemu/total?label=GitHub&logo=GitHub)](https://github.com/jqssun/android-lineage-qemu/releases)
-[![license](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/jqssun/android-lineage-qemu/blob/main/LICENSE)
-[![build](https://img.shields.io/github/actions/workflow/status/jqssun/android-lineage-qemu/build.yml)](https://github.com/jqssun/android-lineage-qemu/actions/workflows/build.yml)
-
-[LineageOS](https://lineageos.org/Changelog-30/) builds for running Android VM on 
+LineageOS builds for running Android VM on 
 - [any macOS/iOS device (via UTM)](https://wiki.lineageos.org/utm-vm-on-apple-silicon-mac), or 
 - [generic libvirt QEMU virtual machines](https://wiki.lineageos.org/libvirt-qemu#create-and-configure-the-virtual-machine-using-virt-manager)
 
 For the latest CI release, see [releases](https://github.com/jqssun/android-lineage-qemu/releases/latest).
-
-<img alt="lineage" src="https://github.com/user-attachments/assets/442b5d82-1b32-4702-b3c1-70c6b033ee58" />
-
 ## Usage
 
 - For first time installs, download `UTM-VM-lineage-*.zip` from releases and unzip.
+- download also start_vm.sh and start_gsi.sh
 
 - To install an update package, boot into **LineageOS Recovery**, select **Apply update**, then **Apply from ADB**. Use [`lineage_virtio_arm64only-ota.zip`](https://github.com/jqssun/android-lineage-qemu/releases/latest/download/lineage_virtio_arm64only-ota.zip) from releases if updating to a new LineageOS build, or use your own update package. On the host, run
 ```shell
 adb sideload [lineage_virtio_arm64only-ota.zip|*.zip]
 ```
 ### Start qemu 
-run 
+TO start the emulator run :
 ```shell
 ./start_vm.sh
 ```
@@ -56,6 +50,12 @@ To install [Magisk](https://github.com/topjohnwu/Magisk/releases/latest), downlo
 fastboot -s tcp:$HOST_IP flash boot magisk_patched*.img
 ```
 
+##Flash GSI :
+### GSI AB
+```shell
+
+```
+
 ## Building
 
 This repository provides the build script to compile LineageOS on the latest Ubuntu, and assumes you already have root access via `sudo` with `apt` and `git` in your `$PATH`. It may also work with other Linux distributions, but these configurations are not tested.
@@ -65,4 +65,4 @@ To build these images yourself via CI (e.g. GitHub Actions), fork this repositor
 ## Credits
 
 - [LineageOS](https://github.com/lineageos)
-- [0xCAFEBABE](https://github.com/me-cafebabe)
+- [jqssun](https://github.com/jqssun)

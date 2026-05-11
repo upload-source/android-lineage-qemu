@@ -1,15 +1,12 @@
 container:
   image: ubuntu:22.04
   cpu: 8
-  memory: 24G
-  # On demande le maximum de disque possible
+  memory: 32G
   greedy: true 
 
 task:
   name: "LineageOS VirtIO Build"
-  timeout_in: 120m # Cirrus limite souvent à 2h en gratuit, il faudra peut-être plusieurs essais
-
-  # Installation des dépendances (car l'image ubuntu est vide)
+  timeout_in: 1200m
   install_script: |
     apt-get update && apt-get install -y \
     bc bison build-essential ccache curl flex g++-multilib gcc-multilib git git-lfs \
@@ -17,22 +14,13 @@ task:
     lib32z1-dev libdw-dev libelf-dev libgnutls28-dev lz4 libsdl1.2-dev libssl-dev \
     libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc \
     xxd zip zlib1g-dev python3-mako python-is-python3 wget ca-certificates
-    
-    # Installation de Repo
     mkdir -p /usr/local/bin
     curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/local/bin/repo
     chmod a+x /usr/local/bin/repo
-
-  # Lancement du build via ton script
   build_script: |
-    # Configuration Git obligatoire pour repo
     git config --global user.name "CirrusCI"
     git config --global user.email "ci@cirrus.com"
-    
-    # Exécution de ton script de build
     chmod +x build.sh
     ./build.sh
-
-  # Récupération du résultat
   artifacts:
     path: "lineage/out/target/product/virtio_arm64only/*.zip"

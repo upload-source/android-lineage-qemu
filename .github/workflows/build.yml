@@ -1,0 +1,30 @@
+name: LineageOS Build Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install QEMU Dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential ninja-build python3-pip libglib2.0-dev libpixman-1-dev libfdt-dev zlib1g-dev libssl-dev libgtk-3-dev libvirglrenderer-dev libslirp-dev libaio-dev liburing-dev
+      - name: Build Optimized QEMU
+        run: |
+          git clone https://gitlab.com/qemu-project/qemu.git --depth 1
+          cd qemu
+          rm -rf build/
+          ./configure --target-list=aarch64-softmmu --disable-werror --enable-slirp --enable-linux-io-uring --enable-linux-aio --enable-opengl --enable-kvm --enable-virglrenderer --extra-cflags="-O3 -march=native"
+          make -j$(nproc)
+          cd ../..
+          zip -r qemu.zip qemu/
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: qemu-build
+          path: qemu.zip
+          if-no-files-found: error        

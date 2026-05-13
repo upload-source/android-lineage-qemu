@@ -53,9 +53,13 @@ fastboot -s tcp:$HOST_IP flash boot magisk_patched*.img
 ##Flash GSI :
 ### GSI AB
 ```shell
-
+fastboot flash system system.img
 ```
-
+###GSI Aonly
+```shell
+fastboot flash system_a system.img
+fastboot flash system_b system.img
+```
 ## Building
 
 This repository provides the build script to compile LineageOS on the latest Ubuntu, and assumes you already have root access via `sudo` with `apt` and `git` in your `$PATH`. It may also work with other Linux distributions, but these configurations are not tested.

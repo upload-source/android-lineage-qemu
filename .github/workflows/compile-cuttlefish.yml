@@ -2,8 +2,8 @@ name: Monthly Cuttlefish Release
 
 on:
   schedule:
-    - cron: '1 0 1 * *'
-  workflow_dispatch
+    - cron: '1 0 2 * *'
+  workflow_dispatch:
 jobs:
   build_and_release:
     runs-on: ubuntu-latest

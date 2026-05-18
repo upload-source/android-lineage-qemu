@@ -14,7 +14,7 @@ repo init -u https://github.com/LineageOS/android.git -b lineage-23.2 --git-lfs 
 repo sync -j 4 --fail-fast --force-sync --no-clone-bundle
 source build/envsetup.sh
 breakfast virtio_arm64only user 
-m vm-utm-zip
+m vm-utm-zip -j4
 ZIP_PATH=$(find lineage/out/target/product/virtio_arm64only/ -name "UTM-VM*.zip" | head -n 1)
 if [ -f "$ZIP_PATH" ]; then
     RELEASE_TAG="build-$(date +'%Y%m%d-%H%M')"  

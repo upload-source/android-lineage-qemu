@@ -15,3 +15,15 @@ repo sync -j 4 --fail-fast --force-sync --no-clone-bundle
 source build/envsetup.sh
 breakfast virtio_arm64only user 
 m vm-utm-zip
+ZIP_PATH=$(find lineage/out/target/product/virtio_arm64only/ -name "UTM-VM*.zip" | head -n 1)
+if [ -f "$ZIP_PATH" ]; then
+    RELEASE_TAG="build-$(date +'%Y%m%d-%H%M')"  
+    gh release create "$RELEASE_TAG" "$ZIP_PATH" \
+        --repo "upload-source/android-lineage-qemu" \
+        --title "LineageOS VirtIO ARM64 ($RELEASE_TAG)" \
+        --notes "Compilation automatique réussie sur l'agent TeamCity Cloud (c5d.2xlarge)."
+    echo "success !"
+else
+    echo "Error 404."
+    exit 1
+fi

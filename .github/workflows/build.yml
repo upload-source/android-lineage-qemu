@@ -24,9 +24,15 @@ jobs:
           make -j$(nproc)
           cd ../..
           zip -r qemu.zip qemu/
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+      - name: Create GitHub Release
+        if: success()
+        uses: softprops/action-gh-release@v2
         with:
-          name: qemu-build
-          path: qemu.zip
-          if-no-files-found: error        
+          tag_name: cuttlefish-${{env.YEAR}}
+          name: cuttlefish-${{ env.VERSION }}
+          body: |
+           Automatic comilation of cuttlefish packages
+          files: cuttlefish.zip
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}     

@@ -58,9 +58,15 @@ jobs:
       - name: Build 
         run: |
             bash build.sh
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+      - name: Create GitHub Release
+        if: success()
+        uses: softprops/action-gh-release@v2
         with:
-          name: qemu-build
-          path: qemu.zip
-          if-no-files-found: error        
+          tag_name: cuttlefish-${{env.YEAR}}
+          name: cuttlefish-${{ env.VERSION }}
+          body: |
+           Android Image for aarch64 machines
+          files: cuttlefish.zip
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

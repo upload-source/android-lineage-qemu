@@ -68,7 +68,7 @@ jobs:
           name: cuttlefish-${{ env.VERSION }}
           body: |
            Android Image for aarch64 machines
-          files: cuttlefish.zip
+          files: UTM-VM*.zip
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

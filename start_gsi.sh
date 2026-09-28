@@ -1,24 +1,28 @@
 #!/bin/bash
 qemu-system-aarch64 \
--name "LineageOS on arm64" \
--machine virt,gic-version=3 \
--cpu max \
--accel tcg,tb-size=4096,thread=multi \
--smp 8 \
--m 4096 \
--drive if=pflash,format=raw,readonly=on,file=./QEMU_CODE.fd \
--drive if=pflash,format=raw,file=./efi_vars.fd \
--device virtio-gpu-gl-pci \
--display sdl,gl=on \
--drive file=./vda.qcow2,if=virtio,format=qcow2,cache=writeback,l2-cache-size=1M,aio=io_uring \
--drive file=./vdb.qcow2,if=virtio,format=qcow2,cache=writeback,l2-cache-size=1M,aio=io_uring \
--drive file=./system.img,if=virtio,format=raw,aio=io_uring \
--device virtio-net-pci,netdev=net0 \
--netdev user,id=net0,hostfwd=tcp::5554-:5554,hostfwd=tcp::5555-:5555 \
--device virtio-rng-pci \
--device usb-ehci,id=usb-bus \
--device usb-kbd,bus=usb-bus.0 \
--device usb-tablet,bus=usb-bus.0 \
--audiodev none,id=noaudio \
--chardev stdio,mux=on,id=charconsole \
--serial chardev:charconsole 
+  -name "LineageOSonarm64" \
+  -machine virt,gic-version=3,highmem=on \
+  -cpu max \
+  -accel tcg,tb-size=4096,thread=multi \
+  -smp 4 \
+  -m 10240 \
+  -drive if=pflash,format=raw,readonly=on,file="./QEMU_CODE.fd" \
+  -drive if=pflash,format=raw,file="./efi_vars.fd" \
+  -device virtio-gpu-gl-pci,virgl=on \
+  -display spice,gl=on \
+  -spice port=5900,addr=127.0.0.1,disable-ticketing=on,playback-compression=off,image-compression=off \
+  -drive file="./vda.qcow2",if=virtio,format=qcow2,cache=writeback,aio=io_uring,discard=unmap \
+  -drive file="./vdb.qcow2",if=virtio,format=qcow2,cache=writeback,aio=io_uring,discard=unmap \
+  -drive file="./system.img",if=virtio,format=raw,aio=io_uring,discard=unmap \
+  -device virtio-net-pci,netdev=net0 \
+  -netdev user,id=net0,hostfwd=tcp::5554-:5554,hostfwd=tcp::5555-:5555 \
+  -device virtio-rng-pci \
+  -device usb-ehci,id=usb-bus \
+  -device usb-kbd,bus=usb-bus.0 \
+  -device usb-tablet,bus=usb-bus.0 \
+  -audiodev none,id=noaudio \
+  -device virtio-serial-pci \
+  -chardev spicevmc,id=vdagent,name=vdagent \
+  -device virtserialport,chardev=vdagent,name=com.redhat.spice.0 \
+  -chardev stdio,mux=on,id=charconsole \
+  -serial chardev:charconsole"

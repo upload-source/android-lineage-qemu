@@ -3,7 +3,7 @@ qemu-system-aarch64 \
 -name "LineageOS on arm64" \
 -machine virt,gic-version=3 \
 -cpu max \
--accel tcg,tb-size=2048,thread=multi \
+-accel tcg,tb-size=4096,thread=multi \
 -smp 8 \
 -m 4096 \
 -drive if=pflash,format=raw,readonly=on,file=./QEMU_CODE.fd \

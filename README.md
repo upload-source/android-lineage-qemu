@@ -50,12 +50,12 @@ To install [Magisk](https://github.com/topjohnwu/Magisk/releases/latest), downlo
 fastboot -s tcp:$HOST_IP flash boot magisk_patched*.img
 ```
 
-##Flash GSI :
+# Flash GSI :
 ### GSI AB
 ```shell
 fastboot flash system system.img
 ```
-###GSI Aonly
+### GSI Aonly
 ```shell
 fastboot flash system_a system.img
 fastboot flash system_b system.img
@@ -65,8 +65,3 @@ fastboot flash system_b system.img
 This repository provides the build script to compile LineageOS on the latest Ubuntu, and assumes you already have root access via `sudo` with `apt` and `git` in your `$PATH`. It may also work with other Linux distributions, but these configurations are not tested.
 
 To build these images yourself via CI (e.g. GitHub Actions), fork this repository, then go to **Actions**, select **Build**, and select **Run workflow**. Under **Runner**, you can either use a GitHub-hosted runner by entering `ubuntu-latest`, or `self-hosted` for your own hardware.
-
-## Credits
-
-- [LineageOS](https://github.com/lineageos)
-- [jqssun](https://github.com/jqssun)

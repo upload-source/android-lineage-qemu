@@ -10,7 +10,8 @@ qemu-system-aarch64 \
   -drive if=pflash,format=raw,file="./efi_vars.fd" \
   -device virtio-gpu-gl-pci,virgl=on \
   -display spice,gl=on \
-  -spice port=5900,addr=127.0.0.1,disable-ticketing=on,playback-compression=off,image-compression=off \
+  -object secret,id=spicepass,data='Password' \ # replace password by your password
+  -spice port=5900,addr=127.0.0.1,playback-compression=off,image-compression=off,disable-ticketing=off,password-secret=spicepass \ # or replace "disable-ticketing=off,password-secret=spicepass" by "disable-ticketing=on" for your personnal use
   -drive file="./vda.qcow2",if=virtio,format=qcow2,cache=writeback,l2-cache-size=1M,aio=io_uring,discard=unmap \
   -drive file="./vdb.qcow2",if=virtio,format=qcow2,cache=writeback,l2-cache-size=1M,aio=io_uring,discard=unmap \
   -device virtio-net-pci,netdev=net0 \
@@ -20,7 +21,7 @@ qemu-system-aarch64 \
   -device usb-kbd,bus=usb-bus.0 \
   -device usb-tablet,bus=usb-bus.0 \
   -audiodev none,id=noaudio \
-    -device virtio-serial-pci \
+  -device virtio-serial-pci \
   -chardev spicevmc,id=vdagent,name=vdagent \
   -device virtserialport,chardev=vdagent,name=com.redhat.spice.0 \
   -chardev stdio,mux=on,id=charconsole \

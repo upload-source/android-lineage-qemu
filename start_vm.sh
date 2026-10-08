@@ -5,7 +5,7 @@ qemu-system-aarch64 \
   -cpu max \
   -accel tcg,tb-size=4096,thread=multi \
   -smp 4 \
-  -m 8192 \
+  -m 10240 \
   -drive if=pflash,format=raw,readonly=on,file="./QEMU_CODE.fd" \
   -drive if=pflash,format=raw,file="./efi_vars.fd" \
   -device virtio-gpu-gl-pci,virgl=on \

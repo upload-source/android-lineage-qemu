@@ -11,8 +11,8 @@ qemu-system-aarch64 \
   -device virtio-gpu-gl-pci,virgl=on \
   -display spice,gl=on \
   -spice port=5900,addr=127.0.0.1,disable-ticketing=on,playback-compression=off,image-compression=off \
-  -drive file="./vda.qcow2",if=virtio,format=qcow2,cache=writeback,l2-cache-size=1M,aio=io_uring \
-  -drive file="./vdb.qcow2",if=virtio,format=qcow2,cache=writeback,l2-cache-size=1M,aio=io_uring \
+  -drive file="./vda.qcow2",if=virtio,format=qcow2,cache=writeback,l2-cache-size=1M,aio=io_uring,discard=unmap \
+  -drive file="./vdb.qcow2",if=virtio,format=qcow2,cache=writeback,l2-cache-size=1M,aio=io_uring,discard=unmap \
   -device virtio-net-pci,netdev=net0 \
   -netdev user,id=net0,hostfwd=tcp::5554-:5554,hostfwd=tcp::5555-:5555 \
   -device virtio-rng-pci \

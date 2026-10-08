@@ -20,5 +20,8 @@ qemu-system-aarch64 \
   -device usb-kbd,bus=usb-bus.0 \
   -device usb-tablet,bus=usb-bus.0 \
   -audiodev none,id=noaudio \
+    -device virtio-serial-pci \
+  -chardev spicevmc,id=vdagent,name=vdagent \
+  -device virtserialport,chardev=vdagent,name=com.redhat.spice.0 \
   -chardev stdio,mux=on,id=charconsole \
   -serial chardev:charconsole 

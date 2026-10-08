@@ -10,7 +10,8 @@ qemu-system-aarch64 \
   -drive if=pflash,format=raw,file="./efi_vars.fd" \
   -device virtio-gpu-gl-pci,virgl=on \
   -display spice,gl=on \
-  -spice port=5900,addr=127.0.0.1,disable-ticketing=on,playback-compression=off,image-compression=off \
+  -object secret,id=spicepass,data='Password' \ # replace password by your password
+  -spice port=5900,addr=127.0.0.1,playback-compression=off,image-compression=off,disable-ticketing=off,password-secret=spicepass \ # or replace "disable-ticketing=off,password-secret=spicepass" by "disable-ticketing=on" for your personnal use
   -drive file="./vda.qcow2",if=virtio,format=qcow2,cache=writeback,l2-cache-size=1M,aio=io_uring,discard=unmap \
   -drive file="./vdb.qcow2",if=virtio,format=qcow2,cache=writeback,l2-cache-size=1M,aio=io_uring,discard=unmap \
   -drive file="./system.img",if=virtio,format=raw,aio=io_uring,l2-cache-size=1M,discard=unmap \

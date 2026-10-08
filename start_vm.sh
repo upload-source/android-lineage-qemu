@@ -1,7 +1,7 @@
 #!/bin/bash
 qemu-system-aarch64 \
 -name "LineageOS on arm64" \
--machine virt,gic-version=3 \
+-machine virt,gic-version=3,highmem=on \
 -cpu max \
 -accel tcg,tb-size=2048,thread=multi \
 -smp 4 \

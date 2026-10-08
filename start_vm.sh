@@ -8,8 +8,9 @@ qemu-system-aarch64 \
 -m 8192 \
 -drive if=pflash,format=raw,readonly=on,file=./QEMU_CODE.fd \
 -drive if=pflash,format=raw,file=./efi_vars.fd \
--device virtio-gpu-gl-pci \
--display sdl,gl=on \
+-device virtio-gpu-gl-pci,virgl=on \
+-display spice,gl=on \
+-spice port=5900,addr=127.0.0.1,disable-ticketing=on,playback-compression=off,image-compression=off \
 -drive file=./vda.qcow2,if=virtio,format=qcow2,cache=writeback,l2-cache-size=1M,aio=io_uring \
 -drive file=./vdb.qcow2,if=virtio,format=qcow2,cache=writeback,l2-cache-size=1M,aio=io_uring \
 -device virtio-net-pci,netdev=net0 \

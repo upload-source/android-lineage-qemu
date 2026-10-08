@@ -1,6 +1,6 @@
 #!/bin/bash
 qemu-system-aarch64 \
-  -name "LineageOSonarm64" \
+  -name "Lineage OS onarm64" \
   -machine virt,gic-version=3,highmem=on \
   -cpu max \
   -accel tcg,tb-size=4096,thread=multi \
